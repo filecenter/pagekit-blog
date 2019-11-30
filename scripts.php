@@ -21,6 +21,7 @@ return [
                 $table->addColumn('comment_count', 'integer', ['default' => 0]);
                 $table->addColumn('data', 'json_array', ['notnull' => false]);
                 $table->addColumn('roles', 'simple_array', ['notnull' => false]);
+                $table->addColumn('views', 'integer', ['unsigned' => true, 'length' => 10, 'default' => 0]);
                 $table->setPrimaryKey(['id']);
                 $table->addUniqueIndex(['slug'], '@BLOG_POST_SLUG');
                 $table->addIndex(['title'], '@BLOG_POST_TITLE');
@@ -90,6 +91,18 @@ return [
                     }
                 }
             }
+
+            $util->migrate();
+        },
+
+        '1.0.8' => function ($app) {
+
+            $db = $app['db'];
+            $util = $db->getUtility();
+
+            /** @var \Pagekit\Database\Table $table */
+            $table = $util->getTable('@blog_post');
+            $table->addColumn('views', 'integer', ['unsigned' => true, 'length' => 10, 'default' => 0]);
 
             $util->migrate();
         }

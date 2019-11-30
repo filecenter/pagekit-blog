@@ -60,6 +60,12 @@ class Post implements \JsonSerializable
     public $comment_count = 0;
 
     /**
+     * @var int Post views counter
+     * @Column(type="integer")
+     */
+    public $views = 0;
+
+    /**
      * @BelongsTo(targetEntity="Pagekit\User\Model\User", keyFrom="user_id")
      */
     public $user;

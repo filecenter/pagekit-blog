@@ -10,6 +10,7 @@
 
     <p class="uk-article-meta">
         <?= __('Written by %name% on %date%', ['%name%' => $this->escape($post->user->name), '%date%' => '<time datetime="'.$post->date->format(\DateTime::ATOM).'" v-cloak>{{ "'.$post->date->format(\DateTime::ATOM).'" | date "longDate" }}</time>' ]) ?>
+        <?= __('Views: %count%', ['%count%' => $post->views]) ?>
     </p>
 
     <div class="uk-margin"><?= $post->content ?></div>

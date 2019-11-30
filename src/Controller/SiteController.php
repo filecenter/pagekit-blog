@@ -132,6 +132,8 @@ class SiteController
             $description = rtrim(mb_substr($description, 0, 150), " \t\n\r\0\x0B.,") . '...';
         }
 
+        $post->save(['views' => ++$post->views]);
+
         return [
             '$view' => [
                 'title' => __($post->title),

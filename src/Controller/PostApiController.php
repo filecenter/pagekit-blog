@@ -94,6 +94,10 @@ class PostApiController
             App::abort(400, __('Access denied.'));
         }
 
+        if (isset($data['views']) && (!is_numeric($data['views']) || $data['views'] < 0)) {
+            App::abort(400, __('Invalid number of views'));
+        }
+
         $post->save($data);
 
         return ['message' => 'success', 'post' => $post];

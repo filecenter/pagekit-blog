@@ -52,6 +52,12 @@
                     </div>
                 </div>
                 <div class="uk-form-row">
+                    <label for="form-views" class="uk-form-label">{{ 'Views' | trans }}</label>
+                    <div class="uk-form-controls">
+                        <input id="form-views" class="uk-width-1-1" type="number" min="0" v-model="post.views">
+                    </div>
+                </div>
+                <div class="uk-form-row">
                     <span class="uk-form-label">{{ 'Publish on' | trans }}</span>
                     <div class="uk-form-controls">
                         <input-date :datetime.sync="post.date"></input-date>
