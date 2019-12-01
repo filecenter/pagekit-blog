@@ -43,6 +43,15 @@
                         </select>
                     </div>
                 </div>
+                <div class="uk-form-row">
+                    <label class="uk-form-label">{{ 'Categories' | trans }}</label>
+                    <div class="uk-form-controls">
+                        <div class="uk-scrollable-box uk-padding-remove" v-if="categories.length">
+                            <input-multiselect :value.sync="post.categories" :options="categories"></input-multiselect>
+                        </div>
+                        <p v-else>{{ 'Categories not found' }}</p>
+                    </div>
+                </div>
                 <div class="uk-form-row" v-if="data.canEditAll">
                     <label for="form-author" class="uk-form-label">{{ 'Author' | trans }}</label>
                     <div class="uk-form-controls">
@@ -83,22 +92,33 @@
                 </div>
 
             </div>
-
         </div>
     </div>
-
 </template>
-
 <script>
-
     module.exports = {
-
         props: ['post', 'data', 'form'],
-
         section: {
             label: 'Post'
+        },
+        created() {
+            if (!this.post.categories) {
+                this.post.categories = [];
+            }
+        },
+        computed: {
+            categories() {
+                let values = [];
+
+                _.forIn(this.data.categories || [], (value) => { // keep values in order
+                    values.push({
+                        title: value.title,
+                        value: value.id
+                    });
+                });
+
+                return values;
+            }
         }
-
     };
-
 </script>

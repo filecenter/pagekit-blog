@@ -3,6 +3,7 @@
 namespace Pagekit\Blog\Controller;
 
 use Pagekit\Application as App;
+use Pagekit\Blog\Model\Category;
 use Pagekit\Blog\Model\Post;
 
 /**
@@ -99,6 +100,20 @@ class PostApiController
         }
 
         $post->save($data);
+
+        // Processing categories @todo probably need a transaction
+        App::db()->delete('@blog_categories_post', ['post_id' => $post->id]);
+
+        if ( ! empty($data['categories']) && is_array($data['categories']))
+        {
+            foreach (Category::query()->whereIn('id', $data['categories'])->get() ?: [] as $category)
+            {
+                App::db()->insert('@blog_categories_post', [
+                    'category_id' => $category->id,
+                    'post_id'     => $post->id
+                ]);
+            }
+        }
 
         return ['message' => 'success', 'post' => $post];
     }

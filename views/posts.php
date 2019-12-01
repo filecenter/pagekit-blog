@@ -11,6 +11,12 @@
 
     <p class="uk-article-meta">
         <?= __('Written by %name% on %date%', ['%name%' => $this->escape($post->user->name), '%date%' => '<time datetime="'.$post->date->format(\DateTime::ATOM).'" v-cloak>{{ "'.$post->date->format(\DateTime::ATOM).'" | date "longDate" }}</time>' ]) ?>
+
+        <?php if ($post->categories): ?>
+            <?php foreach ($post->categories as $category): ?>
+                <a href="<?= $view->url('@blog/category', ['slug' => $category->slug]) ?>"><?= $category->title ?></a>
+            <?php endforeach; ?>
+        <?php endif; ?>
     </p>
 
     <div class="uk-margin"><?= $post->excerpt ?: $post->content ?></div>

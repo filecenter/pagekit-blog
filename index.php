@@ -1,6 +1,7 @@
 <?php
 
 use Pagekit\Blog\Content\ReadmorePlugin;
+use Pagekit\Blog\Controller\CategoryApiController;
 use Pagekit\Blog\Event\PostListener;
 use Pagekit\Blog\Event\RouteListener;
 
@@ -36,7 +37,8 @@ return [
             'name' => '@blog/api',
             'controller' => [
                 'Pagekit\\Blog\\Controller\\PostApiController',
-                'Pagekit\\Blog\\Controller\\CommentApiController'
+                'Pagekit\\Blog\\Controller\\CommentApiController',
+                CategoryApiController::class
             ]
         ]
 
@@ -91,6 +93,13 @@ return [
             'url' => '@blog/post',
             'active' => '@blog/post*',
             'access' => 'blog: manage own posts || blog: manage all posts'
+        ],
+        'blog: categories' => [
+            'label' => 'Categories',
+            'parent' => 'blog',
+            'url' => '@blog/admin/categories',
+            'active' => '@blog/admin/categor*',
+            'access' => 'blog: manage all posts'
         ],
         'blog: comments' => [
             'label' => 'Comments',
@@ -164,6 +173,7 @@ return [
         'view.scripts' => function ($event, $scripts) {
             $scripts->register('link-blog', 'blog:app/bundle/link-blog.js', '~panel-link');
             $scripts->register('post-meta', 'blog:app/bundle/post-meta.js', '~post-edit');
+            $scripts->register('input-multiselect', 'blog:app/bundle/input-multiselect.js', '~post-edit');
         }
 
     ]

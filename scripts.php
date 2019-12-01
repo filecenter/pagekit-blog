@@ -1,9 +1,43 @@
 <?php
 
+use Pagekit\Database\Table;
+use Pagekit\Database\Utility;
+
+if ( ! function_exists('create_categories')) {
+
+    /**
+     * @param Utility $util
+     */
+    function create_categories(Utility $util)
+    {
+        if (!$util->tableExists('@blog_categories')) {
+            $util->createTable('@blog_categories', function (Table $table) {
+                $table->addColumn('id', 'integer', ['unsigned' => true, 'length' => 10, 'autoincrement' => true]);
+                $table->addColumn('slug', 'string', ['length' => 255]);
+                $table->addColumn('title', 'string', ['length' => 255, 'notnull' => false]);
+                $table->addColumn('description', 'text', ['notnull' => false]);
+                $table->addColumn('created_at', 'datetime');
+                $table->setPrimaryKey(['id']);
+                $table->addUniqueIndex(['slug'], 'CATEGORY_SLUG');
+                $table->addIndex(['title'], 'CATEGORY_TITLE');
+            });
+        }
+
+        if (!$util->tableExists('@blog_categories_post')) {
+            $util->createTable('@blog_categories_post', function (Table $table) {
+                $table->addColumn('category_id', 'integer', ['unsigned' => true, 'length' => 10]);
+                $table->addColumn('post_id', 'integer', ['unsigned' => true, 'length' => 10]);
+                $table->setPrimaryKey(['category_id', 'post_id']);
+            });
+        }
+    }
+}
+
 return [
 
     'install' => function ($app) {
 
+        /** @var Utility $util */
         $util = $app['db']->getUtility();
 
         if ($util->tableExists('@blog_post') === false) {
@@ -52,6 +86,8 @@ return [
             });
         }
 
+        create_categories($util);  // New categories tables
+
     },
 
     'uninstall' => function ($app) {
@@ -95,14 +131,19 @@ return [
             $util->migrate();
         },
 
-        '1.0.8' => function ($app) {
+        '1.0.9' => function ($application) {
 
-            $db = $app['db'];
-            $util = $db->getUtility();
+            /** @var Utility $util */
+            $util = $application->db()->getUtility();
 
-            /** @var \Pagekit\Database\Table $table */
+            /** @var Table $table */
             $table = $util->getTable('@blog_post');
-            $table->addColumn('views', 'integer', ['unsigned' => true, 'length' => 10, 'default' => 0]);
+
+            if (!$table->hasColumn('views')) {
+                $table->addColumn('views', 'integer', ['unsigned' => true, 'length' => 10, 'default' => 0]);
+            }
+
+            create_categories($util);  // New categories tables
 
             $util->migrate();
         }

@@ -76,6 +76,12 @@ class Post implements \JsonSerializable
      */
     public $comments;
 
+    /**
+     * @var Category[]
+     * @ManyToMany(targetEntity="Category", tableThrough="@blog_categories_post", keyThroughFrom="post_id", keyThroughTo="category_id")
+     */
+    public $categories = [];
+
     /** @var array */
     protected static $properties = [
         'author' => 'getAuthor',
@@ -136,6 +142,10 @@ class Post implements \JsonSerializable
             $data['comments_pending'] = count(array_filter($this->comments, function ($comment) {
                 return $comment->status == Comment::STATUS_PENDING;
             }));
+        }
+
+        if ($this->categories) {
+            $data['categories'] = array_column($this->categories, 'id');
         }
 
         return $this->toArray($data);

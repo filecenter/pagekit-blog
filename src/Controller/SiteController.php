@@ -3,6 +3,7 @@
 namespace Pagekit\Blog\Controller;
 
 use Pagekit\Application as App;
+use Pagekit\Blog\Model\Category;
 use Pagekit\Blog\Model\Post;
 use Pagekit\Module\Module;
 
@@ -29,7 +30,7 @@ class SiteController
     {
         $query = Post::where(['status = ?', 'date < ?'], [Post::STATUS_PUBLISHED, new \DateTime])->where(function ($query) {
             return $query->where('roles IS NULL')->whereInSet('roles', App::user()->roles, false, 'OR');
-        })->related('user');
+        })->related('user', 'categories');
 
         if (!$limit = $this->blog->config('posts.posts_per_page')) {
             $limit = 10;
@@ -113,7 +114,7 @@ class SiteController
      */
     public function postAction($id = 0)
     {
-        if (!$post = Post::where(['id = ?', 'status = ?', 'date < ?'], [$id, Post::STATUS_PUBLISHED, new \DateTime])->related('user')->first()) {
+        if (!$post = Post::where(['id = ?', 'status = ?', 'date < ?'], [$id, Post::STATUS_PUBLISHED, new \DateTime])->related('user', 'categories')->first()) {
             App::abort(404, __('Post not found!'));
         }
 
@@ -164,4 +165,68 @@ class SiteController
             'post' => $post
         ];
     }
+
+    /**
+     * The view category action.
+     *
+     * @param string $slug
+     * @param int $page
+     *
+     * @Route("/category/{slug}", name="category")
+     * @Route("/category/{slug}/page/{page}", name="category/page", requirements={"page"="\d+"})
+     *
+     * @return array
+     * @throws \Exception
+     */
+    public function categoryAction($slug, $page = 1)
+    {
+        /** @var Category $category */
+        $category = Category::where(['slug' => trim($slug)])->first();
+
+        if (!$category) {
+            App::abort(404, 'Category not found!');
+        }
+
+        /** @var \Pagekit\Database\Query\QueryBuilder $query */
+        $query = Post::where(['status = ?', 'date < ?'])
+            ->where(function ($query) {
+                return $query->where('roles IS NULL')->whereInSet('roles', App::user()->roles, false, 'OR');
+            })
+            ->related('user', 'categories')
+            ->innerJoin('@blog_categories_post', 'post_id = id AND category_id = ?')
+            ->params([$category->id, Post::STATUS_PUBLISHED, new \DateTime]);
+
+        if (!$limit = $this->blog->config('posts.posts_per_page')) {
+            $limit = 10;
+        }
+
+        $count = $query->count('id');
+        $total = ceil($count / $limit);
+        $page = max(1, min($total, $page));
+        $query->offset(($page - 1) * $limit)->limit($limit)->orderBy('date', 'DESC');
+
+        foreach ($posts = $query->get() as $post) {
+            $post->excerpt = App::content()->applyPlugins($post->excerpt, ['post' => $post, 'markdown' => $post->get('markdown')]);
+            $post->content = App::content()->applyPlugins($post->content, ['post' => $post, 'markdown' => $post->get('markdown'), 'readmore' => true]);
+        }
+
+        return [
+            '$view' => [
+                'title' => __($category->title),
+                'name' => 'blog/category.php',
+                'link:feed' => [
+                    'rel' => 'alternate',
+                    'href' => App::url('@blog/feed'),
+                    'title' => App::module('system/site')->config('title'),
+                    'type' => App::feed()->create($this->blog->config('feed.type'))->getMIMEType()
+                ]
+            ],
+            'blog' => $this->blog,
+            'category' => $category,
+            'posts' => $posts,
+            'total' => $total,
+            'page' => $page
+        ];
+    }
+
 }
