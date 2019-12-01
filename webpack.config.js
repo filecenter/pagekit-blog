@@ -10,7 +10,8 @@ module.exports = [
             "post": "./app/views/post",
             "posts": "./app/views/posts",
             "link-blog": "./app/components/link-blog.vue",
-            "post-meta": "./app/components/post-meta.vue"
+            "post-meta": "./app/components/post-meta.vue",
+            "input-multiselect": "./app/components/input-multiselect.vue"
         },
         output: {
             filename: "./app/bundle/[name].js"
