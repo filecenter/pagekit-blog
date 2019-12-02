@@ -174,6 +174,7 @@ return [
             $scripts->register('link-blog', 'blog:app/bundle/link-blog.js', '~panel-link');
             $scripts->register('post-meta', 'blog:app/bundle/post-meta.js', '~post-edit');
             $scripts->register('input-multiselect', 'blog:app/bundle/input-multiselect.js', '~post-edit');
+            $scripts->register('input-tags', 'blog:app/bundle/input-tags.js', '~post-edit');
         }
 
     ]

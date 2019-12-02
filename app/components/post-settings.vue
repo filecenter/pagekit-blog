@@ -52,6 +52,12 @@
                         <p v-else>{{ 'Categories not found' }}</p>
                     </div>
                 </div>
+                <div class="uk-form-row">
+                    <label class="uk-form-label">{{ 'Tags' | trans }}</label>
+                    <div class="uk-form-controls">
+                        <input-tags :tags.sync="tags" :read-only="readOnly" :existing="existing"></input-tags>
+                    </div>
+                </div>
                 <div class="uk-form-row" v-if="data.canEditAll">
                     <label for="form-author" class="uk-form-label">{{ 'Author' | trans }}</label>
                     <div class="uk-form-controls">
@@ -118,6 +124,13 @@
                 });
 
                 return values;
+            }
+        },
+        data() {
+            return {
+                tags: [],
+                existing: ['tag1', 'tag2', 'tag3', 'tag4', 'tag5'],
+                readOnly: false
             }
         }
     };
