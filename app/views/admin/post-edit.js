@@ -30,7 +30,7 @@ window.Post = {
     },
 
     ready: function () {
-        this.tab = UIkit.tab(this.$els.tab, {connect: this.$els.content});
+        this.tab = UIkit.tab(this.$els.tab, {connect: this.$els.content, swiping: false});
     },
 
     methods: {
