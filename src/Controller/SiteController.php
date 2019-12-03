@@ -122,6 +122,8 @@ class SiteController
             App::abort(403, __('Insufficient User Rights.'));
         }
 
+        $post->save(['views' => ++$post->views]);
+
         $post->excerpt = App::content()->applyPlugins($post->excerpt, ['post' => $post, 'markdown' => $post->get('markdown')]);
         $post->content = App::content()->applyPlugins($post->content, ['post' => $post, 'markdown' => $post->get('markdown')]);
 
@@ -132,8 +134,6 @@ class SiteController
             $description = strip_tags($post->excerpt ?: $post->content);
             $description = rtrim(mb_substr($description, 0, 150), " \t\n\r\0\x0B.,") . '...';
         }
-
-        $post->save(['views' => ++$post->views]);
 
         return [
             '$view' => [
