@@ -1,6 +1,7 @@
 <?php
 
 use Pagekit\Blog\Content\ReadmorePlugin;
+use Pagekit\Blog\Content\ResponsiveImagePlugin;
 use Pagekit\Blog\Controller\CategoryApiController;
 use Pagekit\Blog\Event\PostListener;
 use Pagekit\Blog\Event\RouteListener;
@@ -166,7 +167,8 @@ return [
             $app->subscribe(
                 new RouteListener,
                 new PostListener(),
-                new ReadmorePlugin
+                new ReadmorePlugin,
+                new ResponsiveImagePlugin()
             );
         },
 
