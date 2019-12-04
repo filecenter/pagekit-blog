@@ -2,6 +2,7 @@
 
 use Pagekit\Blog\Content\ReadmorePlugin;
 use Pagekit\Blog\Controller\CategoryApiController;
+use Pagekit\Blog\Controller\CategoryController;
 use Pagekit\Blog\Event\PostListener;
 use Pagekit\Blog\Event\RouteListener;
 
@@ -31,7 +32,10 @@ return [
 
         '/blog' => [
             'name' => '@blog',
-            'controller' => 'Pagekit\\Blog\\Controller\\BlogController'
+            'controller' => [
+                'Pagekit\\Blog\\Controller\\BlogController',
+                CategoryController::class
+            ]
         ],
         '/api/blog' => [
             'name' => '@blog/api',
