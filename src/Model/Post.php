@@ -3,11 +3,21 @@
 namespace Pagekit\Blog\Model;
 
 use Pagekit\Application as App;
+use Pagekit\Database\ORM\Annotation\BelongsTo;
+use Pagekit\Database\ORM\Annotation\Column;
+use Pagekit\Database\ORM\Annotation\Entity;
+use Pagekit\Database\ORM\Annotation\HasMany;
+use Pagekit\Database\ORM\Annotation\Id;
+use Pagekit\Database\ORM\Annotation\ManyToMany;
+use Pagekit\Database\ORM\Annotation\OrderBy;
 use Pagekit\System\Model\DataModelTrait;
 use Pagekit\User\Model\AccessModelTrait;
 use Pagekit\User\Model\User;
 
 /**
+ * Class Post
+ *
+ * @package Pagekit\Blog\Model
  * @Entity(tableClass="@blog_post")
  */
 class Post implements \JsonSerializable
@@ -26,37 +36,71 @@ class Post implements \JsonSerializable
     /* Post unpublished. */
     const STATUS_UNPUBLISHED = 3;
 
-    /** @Column(type="integer") @Id */
+    /**
+     * @var integer
+     * @Column(type="integer")
+     * @Id()
+     */
     public $id;
 
-    /** @Column(type="string") */
+    /**
+     * @var string
+     * @Column(type="string")
+     */
     public $title;
 
-    /** @Column(type="string") */
+    /**
+     * @var string
+     * @Column(type="string")
+     */
     public $slug;
 
-    /** @Column(type="integer") */
+    /**
+     * @var integer
+     * @Column(type="integer")
+     */
     public $user_id;
 
-    /** @Column(type="datetime") */
+    /**
+     * @var \DateTime
+     * @Column(type="datetime")
+     */
     public $date;
 
-    /** @Column(type="text") */
+    /**
+     * @var string
+     * @Column(type="text")
+     */
     public $content = '';
 
-    /** @Column(type="text") */
+    /**
+     * @var string
+     * @Column(type="text")
+     */
     public $excerpt = '';
 
-    /** @Column(type="smallint") */
+    /**
+     * @var integer
+     * @Column(type="smallint")
+     */
     public $status;
 
-    /** @Column(type="datetime") */
+    /**
+     * @var \DateTime
+     * @Column(type="datetime")
+     */
     public $modified;
 
-    /** @Column(type="boolean") */
+    /**
+     * @var boolean
+     * @Column(type="boolean")
+     */
     public $comment_status;
 
-    /** @Column(type="integer") */
+    /**
+     * @var integer
+     * @Column(type="integer")
+     */
     public $comment_count = 0;
 
     /**
@@ -66,11 +110,13 @@ class Post implements \JsonSerializable
     public $views = 0;
 
     /**
+     * @var User
      * @BelongsTo(targetEntity="Pagekit\User\Model\User", keyFrom="user_id")
      */
     public $user;
 
     /**
+     * @var Comment[]
      * @HasMany(targetEntity="Comment", keyFrom="id", keyTo="post_id")
      * @OrderBy({"created" = "DESC"})
      */
@@ -82,7 +128,9 @@ class Post implements \JsonSerializable
      */
     public $categories = [];
 
-    /** @var array */
+    /**
+     * @var array
+     */
     protected static $properties = [
         'author' => 'getAuthor',
         'published' => 'isPublished',
@@ -108,7 +156,7 @@ class Post implements \JsonSerializable
 
     public function isCommentable()
     {
-        $blog      = App::module('blog');
+        $blog = App::module('blog');
         $autoclose = $blog->config('comments.autoclose') ? $blog->config('comments.autoclose_days') : 0;
 
         return $this->comment_status && (!$autoclose or $this->date >= new \DateTime("-{$autoclose} day"));
