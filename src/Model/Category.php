@@ -4,6 +4,14 @@ namespace Pagekit\Blog\Model;
 
 use Doctrine\DBAL\Exception\InvalidArgumentException;
 use Pagekit\Application;
+use Pagekit\Database\ORM\Annotation\Column;
+use Pagekit\Database\ORM\Annotation\Creating;
+use Pagekit\Database\ORM\Annotation\Deleted;
+use Pagekit\Database\ORM\Annotation\Entity;
+use Pagekit\Database\ORM\Annotation\Id;
+use Pagekit\Database\ORM\Annotation\Init;
+use Pagekit\Database\ORM\Annotation\ManyToMany;
+use Pagekit\Database\ORM\Annotation\Saving;
 use Pagekit\Database\ORM\ModelTrait;
 use Pagekit\Event\Event;
 
