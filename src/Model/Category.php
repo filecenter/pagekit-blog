@@ -14,7 +14,7 @@ use Pagekit\Event\Event;
  */
 class Category implements \JsonSerializable
 {
-    use ModelTrait;
+    use ModelTrait, UniqueSlugTrait;
 
     /**
      * @var int
@@ -85,22 +85,6 @@ class Category implements \JsonSerializable
     {
         // Cut all script tags
         $category->description = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $category->description);
-
-        // To generate a unique the slug of category
-        $i = 2;
-        $id = $category->id;
-
-        while (self::where('slug = ?', [$category->slug])
-            ->where(function ($query) use ($id) {
-                if ($id)
-                {
-                    $query->where('id <> ?', [$id]);
-                }
-            })
-            ->first())
-        {
-            $category->slug = preg_replace('/-\d+$/', '', $category->slug).'-'.$i++;
-        }
     }
 
     /**
