@@ -12,7 +12,7 @@ use Pagekit\Routing\Annotation\Route;
  * Class CategoryController
  *
  * @package Pagekit\Blog\Controller
- * @Route("category", name="category")
+ * @Route("category")
  */
 class CategoryController
 {
@@ -36,8 +36,8 @@ class CategoryController
      * @param string $slug
      * @param int $page
      *
-     * @Route("/{slug}")
-     * @Route("/{slug}/page/{page}", name="page", requirements={"page"="\d+"})
+     * @Route("/{slug}", name="category")
+     * @Route("/{slug}/page/{page}", name="category/page", requirements={"page"="\d+"})
      *
      * @return array
      * @throws \Exception
