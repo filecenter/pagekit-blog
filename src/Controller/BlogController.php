@@ -30,7 +30,7 @@ class BlogController
                 'canEditAll' => App::user()->hasAccess('blog: manage all posts'),
                 'config'   => [
                     'filter' => (object) $filter,
-                    'page'   => $page
+                    'page'   => (int) $page
                 ]
             ]
         ];
