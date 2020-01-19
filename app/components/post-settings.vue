@@ -44,7 +44,7 @@
                     </div>
                 </div>
                 <div class="uk-form-row">
-                    <label class="uk-form-label">{{ 'Categories' | trans }}</label>
+                    <label class="uk-form-label">{{ 'Categories' | trans }} <span>{{ post.categories.length }}</span></label>
                     <div class="uk-form-controls">
                         <div class="uk-scrollable-box uk-padding-remove" v-if="categories.length">
                             <input-multiselect :value.sync="post.categories" :options="categories"></input-multiselect>

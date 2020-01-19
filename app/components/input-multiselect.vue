@@ -1,8 +1,8 @@
 <template>
     <ul class="uk-nav uk-nav-side">
         <li v-for="value in selectOptions" @click.prevent="toggle(value)">
-            <a href="#" class="uk-flex uk-flex-middle uk-flex-space-between">
-                <span>{{ $key }}</span>
+            <a href="#" class="uk-flex uk-flex-middle uk-flex-space-between" style="display: flex !important;">
+                <span class="uk-flex-item-auto uk-text-truncate">{{ $key }}</span>
                 <span class="uk-float-right" :class="{'pk-icon-check': isSelected(value)}"></span>
             </a>
         </li>

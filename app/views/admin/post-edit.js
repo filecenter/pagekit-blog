@@ -26,6 +26,10 @@ window.Post = {
 
         this.$set('sections', _.sortBy(sections, 'priority'));
 
+        if (!this.post.categories) {
+            this.$set('post.categories', []);
+        }
+
         this.resource = this.$resource('api/blog/post{/id}');
     },
 
