@@ -112,6 +112,8 @@ class PostApiController
                     'category_id' => $category->id,
                     'post_id'     => $post->id
                 ]);
+
+                $post->categories[] = $category;
             }
         }
 
